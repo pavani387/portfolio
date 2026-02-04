@@ -1,90 +1,1464 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mobile App Redesign | Case Study</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Driven Grip Force Prediction for Robots</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    * {
+      font-family: 'Outfit', sans-serif;
+    }
+    
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #00f5d4 0%, #7b2cbf 50%, #f72585 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .glass-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .glow-btn {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .glow-btn::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(135deg, #00f5d4, #7b2cbf, #f72585);
+      z-index: -1;
+      border-radius: inherit;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .glow-btn:hover::before {
+      opacity: 1;
+    }
+    
+    .circuit-pattern {
+      background-image: 
+        radial-gradient(circle at 25% 25%, rgba(0, 245, 212, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(247, 37, 133, 0.03) 0%, transparent 50%);
+    }
+    
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(2deg); }
+    }
+    
+    .pulse-ring {
+      animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+    }
+    
+    @keyframes pulse-ring {
+      0% { transform: scale(0.8); opacity: 1; }
+      50% { transform: scale(1); opacity: 0.5; }
+      100% { transform: scale(0.8); opacity: 1; }
+    }
+    
+    .slide-up {
+      animation: slideUp 0.6s ease-out forwards;
+      opacity: 0;
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .nav-link {
+      position: relative;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #00f5d4, #f72585);
+      transition: width 0.3s;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    .progress-bar {
+      background: linear-gradient(90deg, #00f5d4 0%, #7b2cbf 50%, #f72585 100%);
+    }
+    
+    .robot-arm {
+      filter: drop-shadow(0 0 30px rgba(0, 245, 212, 0.3));
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 245, 212, 0.1);
+    }
+    
+    .industry-card:hover .industry-icon {
+      transform: scale(1.1) rotate(5deg);
+    }
+    
+    input[type="range"] {
+      -webkit-appearance: none;
+      background: transparent;
+    }
+    
+    input[type="range"]::-webkit-slider-track {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, #00f5d4, #7b2cbf);
+      border-radius: 50%;
+      cursor: pointer;
+      margin-top: -7px;
+    }
+    
+    .scroll-indicator {
+      animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-[#0a0a0f] text-white overflow-auto">
+  <div id="app-wrapper" class="h-full w-full"><!-- Navigation -->
+   <nav class="fixed top-0 left-0 right-0 z-50 glass-card border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+     <div class="flex items-center gap-8">
+      <div class="flex items-center gap-3">
+       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00f5d4] to-[#7b2cbf] flex items-center justify-center">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+       </div><span class="font-bold text-lg">GripAI</span>
+      </div>
+      <div class="hidden lg:flex items-center gap-6"><a href="#home" class="nav-link text-sm text-white/70 hover:text-white transition-colors">Home</a> <a href="#problem" class="nav-link text-sm text-white/70 hover:text-white transition-colors">Problem</a> <a href="#solution" class="nav-link text-sm text-white/70 hover:text-white transition-colors">Solution</a> <a href="#models" class="nav-link text-sm text-white/70 hover:text-white transition-colors">Models</a> <a href="#demo" class="nav-link text-sm text-white/70 hover:text-white transition-colors">Demo</a> <a href="#industries" class="nav-link text-sm text-white/70 hover:text-white transition-colors">Industries</a> <a href="#login-contact" class="nav-link text-sm text-white/70 hover:text-white transition-colors">Contact</a>
+      </div>
+     </div><button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg hover:bg-white/5">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg></button>
+    </div><!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden lg:hidden px-6 pb-4">
+     <div class="flex flex-col gap-4"><a href="#home" class="text-sm text-white/70 hover:text-white transition-colors py-2">Home</a> <a href="#problem" class="text-sm text-white/70 hover:text-white transition-colors py-2">Problem</a> <a href="#solution" class="text-sm text-white/70 hover:text-white transition-colors py-2">Solution</a> <a href="#models" class="text-sm text-white/70 hover:text-white transition-colors py-2">Models</a> <a href="#demo" class="text-sm text-white/70 hover:text-white transition-colors py-2">Demo</a> <a href="#industries" class="text-sm text-white/70 hover:text-white transition-colors py-2">Industries</a> <a href="#login-contact" class="text-sm text-white/70 hover:text-white transition-colors py-2">Contact</a>
+     </div>
+    </div>
+   </nav><!-- Hero Section -->
+   <section id="home" class="min-h-screen circuit-pattern relative flex items-center justify-center pt-20 px-6">
+    <div class="absolute inset-0 overflow-hidden">
+     <div class="absolute top-20 left-10 w-72 h-72 bg-[#00f5d4]/10 rounded-full blur-3xl"></div>
+     <div class="absolute bottom-20 right-10 w-96 h-96 bg-[#f72585]/10 rounded-full blur-3xl"></div>
+     <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#7b2cbf]/5 rounded-full blur-3xl"></div>
+    </div>
+    <div class="max-w-6xl mx-auto text-center relative z-10">
+     <div class="slide-up" style="animation-delay: 0.1s"><span class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card text-xs font-medium text-[#00f5d4] mb-6"> <span class="w-2 h-2 bg-[#00f5d4] rounded-full pulse-ring"></span> Machine Learning Powered </span>
+     </div>
+     <h1 id="hero-title" class="slide-up text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight" style="animation-delay: 0.2s"><span class="gradient-text">AI-Driven Grip Force</span><br><span class="text-white">Prediction for Robots</span></h1>
+     <p id="hero-tagline" class="slide-up text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-8" style="animation-delay: 0.3s">Smart gripping using Machine Learning — This system predicts the perfect gripping force for robots using AI models like Random Forest and Linear Regression.</p>
+     <div class="slide-up flex flex-wrap items-center justify-center gap-4 mb-12" style="animation-delay: 0.4s"><a href="#demo" class="glow-btn px-8 py-4 bg-gradient-to-r from-[#00f5d4] to-[#7b2cbf] rounded-xl font-semibold text-white hover:opacity-90 transition-all transform hover:scale-105"> View Demo </a> <a href="#solution" class="px-8 py-4 glass-card rounded-xl font-semibold text-white hover:bg-white/5 transition-all"> How It Works </a> <a href="#models" class="px-8 py-4 glass-card rounded-xl font-semibold text-white hover:bg-white/5 transition-all"> Models Used </a>
+     </div><!-- Robot Illustration -->
+     <div class="slide-up floating" style="animation-delay: 0.5s">
+      <svg class="robot-arm w-64 h-64 md:w-80 md:h-80 mx-auto" viewbox="0 0 200 200" fill="none"><!-- Robot Base --> <rect x="70" y="160" width="60" height="30" rx="4" fill="url(#grad1)" opacity="0.8" /> <!-- Robot Arm --> <rect x="85" y="80" width="30" height="80" rx="4" fill="url(#grad2)" /> <!-- Gripper Base --> <rect x="75" y="50" width="50" height="35" rx="6" fill="url(#grad1)" /> <!-- Left Gripper --> <path d="M75 55 L60 55 L55 70 L60 85 L75 85" stroke="url(#grad3)" stroke-width="4" fill="none" stroke-linecap="round" /> <!-- Right Gripper --> <path d="M125 55 L140 55 L145 70 L140 85 L125 85" stroke="url(#grad3)" stroke-width="4" fill="none" stroke-linecap="round" /> <!-- Sensor Dots --> <circle cx="85" cy="67" r="4" fill="#00f5d4">
+        <animate attributename="opacity" values="1;0.3;1" dur="2s" repeatcount="indefinite" />
+       </circle> <circle cx="115" cy="67" r="4" fill="#00f5d4">
+        <animate attributename="opacity" values="0.3;1;0.3" dur="2s" repeatcount="indefinite" />
+       </circle> <circle cx="100" cy="75" r="3" fill="#f72585">
+        <animate attributename="opacity" values="1;0.5;1" dur="1.5s" repeatcount="indefinite" />
+       </circle> <!-- Object being gripped --> <rect x="80" y="35" width="40" height="15" rx="3" fill="#7b2cbf" opacity="0.6" /> <defs>
+        <lineargradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+         <stop offset="0%" style="stop-color:#00f5d4" />
+         <stop offset="100%" style="stop-color:#7b2cbf" />
+        </lineargradient>
+        <lineargradient id="grad2" x1="0%" y1="0%" x2="0%" y2="100%">
+         <stop offset="0%" style="stop-color:#7b2cbf" />
+         <stop offset="100%" style="stop-color:#3a0ca3" />
+        </lineargradient>
+        <lineargradient id="grad3" x1="0%" y1="0%" x2="100%" y2="0%">
+         <stop offset="0%" style="stop-color:#00f5d4" />
+         <stop offset="100%" style="stop-color:#f72585" />
+        </lineargradient>
+       </defs>
+      </svg>
+     </div><!-- Scroll Indicator -->
+     <div class="scroll-indicator absolute bottom-8 left-1/2 transform -translate-x-1/2">
+      <svg class="w-6 h-6 text-white/30" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+      </svg>
+     </div>
+    </div>
+   </section><!-- Problem Statement -->
+   <section id="problem" class="py-24 px-6 relative">
+    <div class="max-w-6xl mx-auto">
+     <div class="text-center mb-16"><span class="text-[#f72585] text-sm font-semibold tracking-wider uppercase">The Challenge</span>
+      <h2 class="text-3xl md:text-5xl font-bold mt-4 mb-6">Problem Statement</h2>
+      <p class="text-white/60 max-w-2xl mx-auto">Understanding the limitations of traditional robotic gripping systems</p>
+     </div>
+     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="glass-card rounded-2xl p-6 hover:bg-white/5 transition-all group">
+       <div class="w-14 h-14 rounded-xl bg-red-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+       </div>
+       <h3 class="text-xl font-semibold mb-2">Fixed Grip Force</h3>
+       <p class="text-white/50 text-sm">Robots use constant force regardless of object properties, leading to inefficiency</p>
+      </div>
+      <div class="glass-card rounded-2xl p-6 hover:bg-white/5 transition-all group">
+       <div class="w-14 h-14 rounded-xl bg-orange-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <svg class="w-7 h-7 text-orange-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+        </svg>
+       </div>
+       <h3 class="text-xl font-semibold mb-2">Fragile Object Damage</h3>
+       <p class="text-white/50 text-sm">Delicate items get crushed or broken due to excessive gripping pressure</p>
+      </div>
+      <div class="glass-card rounded-2xl p-6 hover:bg-white/5 transition-all group">
+       <div class="w-14 h-14 rounded-xl bg-yellow-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <svg class="w-7 h-7 text-yellow-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+        </svg>
+       </div>
+       <h3 class="text-xl font-semibold mb-2">Heavy Objects Slip</h3>
+       <p class="text-white/50 text-sm">Insufficient grip force causes heavier items to slip and fall during handling</p>
+      </div>
+      <div class="glass-card rounded-2xl p-6 hover:bg-white/5 transition-all group">
+       <div class="w-14 h-14 rounded-xl bg-purple-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <svg class="w-7 h-7 text-purple-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+       </div>
+       <h3 class="text-xl font-semibold mb-2">Manual Calibration</h3>
+       <p class="text-white/50 text-sm">Time-consuming and expensive manual tuning required for each object type</p>
+      </div>
+      <div class="glass-card rounded-2xl p-6 hover:bg-white/5 transition-all group">
+       <div class="w-14 h-14 rounded-xl bg-pink-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <svg class="w-7 h-7 text-pink-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+        </svg>
+       </div>
+       <h3 class="text-xl font-semibold mb-2">No Intelligence</h3>
+       <p class="text-white/50 text-sm">Traditional grippers lack adaptive learning capabilities for dynamic environments</p>
+      </div>
+      <div class="glass-card rounded-2xl p-6 bg-gradient-to-br from-[#00f5d4]/10 to-[#7b2cbf]/10 border-[#00f5d4]/20">
+       <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-[#00f5d4] to-[#7b2cbf] flex items-center justify-center mb-4">
+        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+       </div>
+       <h3 class="text-xl font-semibold mb-2">The Solution?</h3>
+       <p class="text-white/70 text-sm font-medium">AI-powered adaptive grip force prediction using machine learning</p>
+      </div>
+     </div>
+    </div>
+   </section><!-- Solution Section -->
+   <section id="solution" class="py-24 px-6 relative">
+    <div class="absolute inset-0 bg-gradient-to-b from-[#7b2cbf]/5 to-transparent"></div>
+    <div class="max-w-6xl mx-auto relative z-10">
+     <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <div><span class="text-[#00f5d4] text-sm font-semibold tracking-wider uppercase">Our Approach</span>
+       <h2 class="text-3xl md:text-5xl font-bold mt-4 mb-6">The AI Solution</h2>
+       <p class="text-white/60 mb-8">Our intelligent system revolutionizes robotic gripping through advanced machine learning algorithms.</p>
+       <div class="space-y-6">
+        <div class="flex gap-4">
+         <div class="w-12 h-12 rounded-xl bg-[#00f5d4]/10 flex items-center justify-center shrink-0">
+          <svg class="w-6 h-6 text-[#00f5d4]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+         </div>
+         <div>
+          <h4 class="font-semibold mb-1">Automatic Force Prediction</h4>
+          <p class="text-white/50 text-sm">AI predicts optimal grip force automatically without manual intervention</p>
+         </div>
+        </div>
+        <div class="flex gap-4">
+         <div class="w-12 h-12 rounded-xl bg-[#7b2cbf]/10 flex items-center justify-center shrink-0">
+          <svg class="w-6 h-6 text-[#7b2cbf]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+          </svg>
+         </div>
+         <div>
+          <h4 class="font-semibold mb-1">Data-Driven Decisions</h4>
+          <p class="text-white/50 text-sm">Uses real object data instead of fixed rules for accurate predictions</p>
+         </div>
+        </div>
+        <div class="flex gap-4">
+         <div class="w-12 h-12 rounded-xl bg-[#f72585]/10 flex items-center justify-center shrink-0">
+          <svg class="w-6 h-6 text-[#f72585]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+          </svg>
+         </div>
+         <div>
+          <h4 class="font-semibold mb-1">Universal Adaptability</h4>
+          <p class="text-white/50 text-sm">Works across different shapes, weights, and materials seamlessly</p>
+         </div>
+        </div>
+        <div class="flex gap-4">
+         <div class="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center shrink-0">
+          <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+         </div>
+         <div>
+          <h4 class="font-semibold mb-1">Enhanced Safety</h4>
+          <p class="text-white/50 text-sm">Improves safety and accuracy in all gripping operations</p>
+         </div>
+        </div>
+       </div>
+      </div><!-- How System Works Flow -->
+      <div class="glass-card rounded-3xl p-8">
+       <h3 class="text-xl font-bold mb-8 text-center">How the System Works</h3>
+       <div class="space-y-4">
+        <div class="flex items-center gap-4">
+         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#00f5d4] to-[#7b2cbf] flex items-center justify-center font-bold shrink-0">
+          1
+         </div>
+         <div class="flex-1 glass-card rounded-xl p-4">
+          <div class="flex items-center gap-3">
+           <svg class="w-5 h-5 text-[#00f5d4]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+           </svg><span class="font-medium">Robot scans the object</span>
+          </div>
+         </div>
+        </div>
+        <div class="flex justify-center">
+         <svg class="w-6 h-6 text-white/30" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+         </svg>
+        </div>
+        <div class="flex items-center gap-4">
+         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#7b2cbf] to-[#f72585] flex items-center justify-center font-bold shrink-0">
+          2
+         </div>
+         <div class="flex-1 glass-card rounded-xl p-4">
+          <div class="flex items-center gap-3">
+           <svg class="w-5 h-5 text-[#7b2cbf]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+           </svg><span class="font-medium">Sensor data is collected</span>
+          </div>
+         </div>
+        </div>
+        <div class="flex justify-center">
+         <svg class="w-6 h-6 text-white/30" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+         </svg>
+        </div>
+        <div class="flex items-center gap-4">
+         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#f72585] to-[#00f5d4] flex items-center justify-center font-bold shrink-0">
+          3
+         </div>
+         <div class="flex-1 glass-card rounded-xl p-4">
+          <div class="flex items-center gap-3">
+           <svg class="w-5 h-5 text-[#f72585]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+           </svg><span class="font-medium">Data sent to ML model</span>
+          </div>
+         </div>
+        </div>
+        <div class="flex justify-center">
+         <svg class="w-6 h-6 text-white/30" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+         </svg>
+        </div>
+        <div class="flex items-center gap-4">
+         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#00f5d4] to-[#f72585] flex items-center justify-center font-bold shrink-0">
+          4
+         </div>
+         <div class="flex-1 glass-card rounded-xl p-4">
+          <div class="flex items-center gap-3">
+           <svg class="w-5 h-5 text-[#00f5d4]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+           </svg><span class="font-medium">AI predicts grip force</span>
+          </div>
+         </div>
+        </div>
+        <div class="flex justify-center">
+         <svg class="w-6 h-6 text-white/30" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+         </svg>
+        </div>
+        <div class="flex items-center gap-4">
+         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#7b2cbf] to-[#00f5d4] flex items-center justify-center font-bold shrink-0">
+          5
+         </div>
+         <div class="flex-1 glass-card rounded-xl p-4 border border-[#00f5d4]/30">
+          <div class="flex items-center gap-3">
+           <svg class="w-5 h-5 text-[#00f5d4]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+           </svg><span class="font-medium text-[#00f5d4]">Robot adjusts its grip!</span>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Input Parameters -->
+   <section class="py-24 px-6 relative">
+    <div class="max-w-6xl mx-auto">
+     <div class="text-center mb-16"><span class="text-[#00f5d4] text-sm font-semibold tracking-wider uppercase">Data Inputs</span>
+      <h2 class="text-3xl md:text-5xl font-bold mt-4 mb-6">Input Parameters</h2>
+      <p class="text-white/60 max-w-2xl mx-auto">The data points our AI uses to predict optimal grip force</p>
+     </div>
+     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="glass-card rounded-2xl p-6 text-center hover:scale-105 transition-transform">
+       <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00f5d4]/20 to-[#00f5d4]/5 flex items-center justify-center mx-auto mb-4"><span class="text-3xl">⚖️</span>
+       </div>
+       <h4 class="font-semibold mb-2">Object Weight</h4>
+       <p class="text-white/50 text-sm">Mass of the object in grams</p>
+      </div>
+      <div class="glass-card rounded-2xl p-6 text-center hover:scale-105 transition-transform">
+       <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#7b2cbf]/20 to-[#7b2cbf]/5 flex items-center justify-center mx-auto mb-4"><span class="text-3xl">📏</span>
+       </div>
+       <h4 class="font-semibold mb-2">Dimensions</h4>
+       <p class="text-white/50 text-sm">Height, width, and thickness</p>
+      </div>
+      <div class="glass-card rounded-2xl p-6 text-center hover:scale-105 transition-transform">
+       <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#f72585]/20 to-[#f72585]/5 flex items-center justify-center mx-auto mb-4"><span class="text-3xl">🧱</span>
+       </div>
+       <h4 class="font-semibold mb-2">Material Type</h4>
+       <p class="text-white/50 text-sm">Metal, plastic, glass, wood, etc.</p>
+      </div>
+      <div class="glass-card rounded-2xl p-6 text-center hover:scale-105 transition-transform">
+       <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-500/5 flex items-center justify-center mx-auto mb-4"><span class="text-3xl">✋</span>
+       </div>
+       <h4 class="font-semibold mb-2">Surface Type</h4>
+       <p class="text-white/50 text-sm">Smooth, rough, textured, slippery</p>
+      </div>
+      <div class="glass-card rounded-2xl p-6 text-center hover:scale-105 transition-transform">
+       <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500/20 to-green-500/5 flex items-center justify-center mx-auto mb-4"><span class="text-3xl">📦</span>
+       </div>
+       <h4 class="font-semibold mb-2">Object Category</h4>
+       <p class="text-white/50 text-sm">Fragile, solid, soft, rigid</p>
+      </div>
+      <div class="glass-card rounded-2xl p-6 text-center hover:scale-105 transition-transform border border-[#00f5d4]/20">
+       <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00f5d4] to-[#7b2cbf] flex items-center justify-center mx-auto mb-4"><span class="text-3xl">🤖</span>
+       </div>
+       <h4 class="font-semibold mb-2 text-[#00f5d4]">Output: Grip Force</h4>
+       <p class="text-white/50 text-sm">Predicted force in Newtons</p>
+      </div>
+     </div>
+    </div>
+   </section><!-- Machine Learning Models -->
+   <section id="models" class="py-24 px-6 relative">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#7b2cbf]/5 to-transparent"></div>
+    <div class="max-w-6xl mx-auto relative z-10">
+     <div class="text-center mb-16"><span class="text-[#7b2cbf] text-sm font-semibold tracking-wider uppercase">AI Models</span>
+      <h2 class="text-3xl md:text-5xl font-bold mt-4 mb-6">Machine Learning Models</h2>
+      <p class="text-white/60 max-w-2xl mx-auto">We use two powerful algorithms to predict grip force with high accuracy</p>
+     </div>
+     <div class="grid lg:grid-cols-2 gap-8 mb-16"><!-- Linear Regression -->
+      <div class="glass-card rounded-3xl p-8 hover:border-[#00f5d4]/30 transition-all group">
+       <div class="flex items-center gap-4 mb-6">
+        <div class="w-16 h-16 rounded-2xl bg-[#00f5d4]/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+         <svg class="w-8 h-8 text-[#00f5d4]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+         </svg>
+        </div>
+        <div>
+         <h3 class="text-2xl font-bold">Linear Regression</h3><span class="text-[#00f5d4] text-sm">Basic Model</span>
+        </div>
+       </div>
+       <p class="text-white/60 mb-6">A fundamental statistical approach that models the relationship between input features and grip force as a linear equation.</p>
+       <div class="space-y-4">
+        <div class="flex items-center gap-3">
+         <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+         </svg><span class="text-white/70">Simple and interpretable</span>
+        </div>
+        <div class="flex items-center gap-3">
+         <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+         </svg><span class="text-white/70">Fast computation speed</span>
+        </div>
+        <div class="flex items-center gap-3">
+         <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+         </svg><span class="text-white/70">Good for basic prediction</span>
+        </div>
+        <div class="flex items-center gap-3">
+         <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+         </svg><span class="text-white/50">Limited with complex patterns</span>
+        </div>
+       </div>
+       <div class="mt-6 p-4 rounded-xl bg-white/5">
+        <div class="mono text-sm text-white/60">
+         y = β₀ + β₁x₁ + β₂x₂ + ... + βₙxₙ
+        </div>
+       </div>
+      </div><!-- Random Forest -->
+      <div class="glass-card rounded-3xl p-8 border border-[#f72585]/30 bg-gradient-to-br from-[#f72585]/5 to-transparent group">
+       <div class="absolute -top-3 -right-3 px-3 py-1 bg-gradient-to-r from-[#f72585] to-[#7b2cbf] rounded-full text-xs font-semibold">
+        RECOMMENDED
+       </div>
+       <div class="flex items-center gap-4 mb-6">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#f72585]/20 to-[#7b2cbf]/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+         <svg class="w-8 h-8 text-[#f72585]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+         </svg>
+        </div>
+        <div>
+         <h3 class="text-2xl font-bold">Random Forest</h3><span class="text-[#f72585] text-sm">Advanced Model</span>
+        </div>
+       </div>
+       <p class="text-white/60 mb-6">An ensemble learning method that constructs multiple decision trees and merges them for more accurate and stable predictions.</p>
+       <div class="space-y-4">
+        <div class="flex items-center gap-3">
+         <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+         </svg><span class="text-white/70">High prediction accuracy</span>
+        </div>
+        <div class="flex items-center gap-3">
+         <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+         </svg><span class="text-white/70">Handles complex data patterns</span>
+        </div>
+        <div class="flex items-center gap-3">
+         <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+         </svg><span class="text-white/70">Robust against outliers</span>
+        </div>
+        <div class="flex items-center gap-3">
+         <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+         </svg><span class="text-white/70">Better generalization</span>
+        </div>
+       </div>
+       <div class="mt-6 p-4 rounded-xl bg-white/5 flex items-center gap-4">
+        <div class="flex -space-x-2">
+         <div class="w-8 h-8 rounded-lg bg-[#00f5d4]/20 flex items-center justify-center text-xs">
+          🌲
+         </div>
+         <div class="w-8 h-8 rounded-lg bg-[#7b2cbf]/20 flex items-center justify-center text-xs">
+          🌲
+         </div>
+         <div class="w-8 h-8 rounded-lg bg-[#f72585]/20 flex items-center justify-center text-xs">
+          🌲
+         </div>
+         <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-xs text-white/50">
+          +n
+         </div>
+        </div><span class="text-sm text-white/60">Multiple decision trees combined</span>
+       </div>
+      </div>
+     </div><!-- Model Comparison Table -->
+     <div class="glass-card rounded-3xl overflow-hidden">
+      <div class="p-6 border-b border-white/10">
+       <h3 class="text-xl font-bold">Model Comparison</h3>
+      </div>
+      <div class="overflow-x-auto">
+       <table class="w-full">
+        <thead class="bg-white/5">
+         <tr>
+          <th class="px-6 py-4 text-left text-sm font-semibold text-white/70">Model</th>
+          <th class="px-6 py-4 text-left text-sm font-semibold text-white/70">Accuracy</th>
+          <th class="px-6 py-4 text-left text-sm font-semibold text-white/70">Speed</th>
+          <th class="px-6 py-4 text-left text-sm font-semibold text-white/70">Stability</th>
+          <th class="px-6 py-4 text-left text-sm font-semibold text-white/70">Complexity Handling</th>
+         </tr>
+        </thead>
+        <tbody>
+         <tr class="border-b border-white/5">
+          <td class="px-6 py-4">
+           <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-[#00f5d4]/10 flex items-center justify-center">
+             <svg class="w-4 h-4 text-[#00f5d4]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4" />
+             </svg>
+            </div><span class="font-medium">Linear Regression</span>
+           </div></td>
+          <td class="px-6 py-4">
+           <div class="flex items-center gap-2">
+            <div class="w-24 h-2 bg-white/10 rounded-full overflow-hidden">
+             <div class="h-full w-3/5 bg-yellow-400 rounded-full"></div>
+            </div><span class="text-sm text-yellow-400">Medium</span>
+           </div></td>
+          <td class="px-6 py-4">
+           <div class="flex items-center gap-2">
+            <div class="w-24 h-2 bg-white/10 rounded-full overflow-hidden">
+             <div class="h-full w-4/5 bg-green-400 rounded-full"></div>
+            </div><span class="text-sm text-green-400">High</span>
+           </div></td>
+          <td class="px-6 py-4">
+           <div class="flex items-center gap-2">
+            <div class="w-24 h-2 bg-white/10 rounded-full overflow-hidden">
+             <div class="h-full w-2/5 bg-red-400 rounded-full"></div>
+            </div><span class="text-sm text-red-400">Low</span>
+           </div></td>
+          <td class="px-6 py-4"><span class="px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-400 text-xs">Basic</span></td>
+         </tr>
+         <tr>
+          <td class="px-6 py-4">
+           <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-[#f72585]/10 flex items-center justify-center">
+             <svg class="w-4 h-4 text-[#f72585]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
+             </svg>
+            </div><span class="font-medium">Random Forest</span> <span class="px-2 py-0.5 rounded bg-[#f72585]/20 text-[#f72585] text-xs">Best</span>
+           </div></td>
+          <td class="px-6 py-4">
+           <div class="flex items-center gap-2">
+            <div class="w-24 h-2 bg-white/10 rounded-full overflow-hidden">
+             <div class="h-full w-[90%] bg-green-400 rounded-full"></div>
+            </div><span class="text-sm text-green-400">High</span>
+           </div></td>
+          <td class="px-6 py-4">
+           <div class="flex items-center gap-2">
+            <div class="w-24 h-2 bg-white/10 rounded-full overflow-hidden">
+             <div class="h-full w-3/5 bg-yellow-400 rounded-full"></div>
+            </div><span class="text-sm text-yellow-400">Medium</span>
+           </div></td>
+          <td class="px-6 py-4">
+           <div class="flex items-center gap-2">
+            <div class="w-24 h-2 bg-white/10 rounded-full overflow-hidden">
+             <div class="h-full w-[85%] bg-green-400 rounded-full"></div>
+            </div><span class="text-sm text-green-400">High</span>
+           </div></td>
+          <td class="px-6 py-4"><span class="px-3 py-1 rounded-full bg-green-500/10 text-green-400 text-xs">Advanced</span></td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+     <div class="mt-8 glass-card rounded-2xl p-6 border border-[#00f5d4]/20">
+      <div class="flex items-start gap-4">
+       <div class="w-12 h-12 rounded-xl bg-[#00f5d4]/10 flex items-center justify-center shrink-0">
+        <svg class="w-6 h-6 text-[#00f5d4]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+       </div>
+       <div>
+        <h4 class="font-semibold mb-1">Why Random Forest Performs Better</h4>
+        <p class="text-white/60 text-sm">Random Forest outperforms Linear Regression because it captures non-linear relationships between object properties and grip force. By combining multiple decision trees, it reduces overfitting and provides more stable predictions across diverse object types and materials.</p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Live Prediction Demo -->
+   <section id="demo" class="py-24 px-6 relative">
+    <div class="absolute inset-0 bg-gradient-to-b from-[#f72585]/5 to-transparent"></div>
+    <div class="max-w-4xl mx-auto relative z-10">
+     <div class="text-center mb-16"><span class="text-[#f72585] text-sm font-semibold tracking-wider uppercase">Try It Yourself</span>
+      <h2 class="text-3xl md:text-5xl font-bold mt-4 mb-6">Live Prediction Demo</h2>
+      <p class="text-white/60 max-w-2xl mx-auto">Enter object details below to see the AI predict the optimal grip force</p>
+     </div>
+     <div class="glass-card rounded-3xl p-8 border border-[#f72585]/20">
+      <div id="prediction-form" class="space-y-6"><!-- Weight Input -->
+       <div><label class="block text-sm font-medium mb-2">Object Weight (grams)</label>
+        <div class="flex items-center gap-4"><input type="range" id="weight" min="10" max="5000" value="500" class="flex-1"> <span id="weight-value" class="w-20 text-center mono text-[#00f5d4]">500g</span>
+        </div>
+       </div><!-- Dimensions -->
+       <div class="grid sm:grid-cols-3 gap-4">
+        <div><label for="height" class="block text-sm font-medium mb-2">Height (cm)</label> <input type="number" id="height" value="10" min="1" max="100" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-[#00f5d4]/50 focus:outline-none">
+        </div>
+        <div><label for="width" class="block text-sm font-medium mb-2">Width (cm)</label> <input type="number" id="width" value="8" min="1" max="100" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-[#00f5d4]/50 focus:outline-none">
+        </div>
+        <div><label for="thickness" class="block text-sm font-medium mb-2">Thickness (cm)</label> <input type="number" id="thickness" value="5" min="1" max="100" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-[#00f5d4]/50 focus:outline-none">
+        </div>
+       </div><!-- Material Type -->
+       <div><label for="material" class="block text-sm font-medium mb-2">Material Type</label> <select id="material" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-[#00f5d4]/50 focus:outline-none"> <option value="plastic">Plastic</option> <option value="metal">Metal</option> <option value="glass">Glass</option> <option value="wood">Wood</option> <option value="rubber">Rubber</option> <option value="ceramic">Ceramic</option> </select>
+       </div><!-- Surface Type -->
+       <div><label for="surface" class="block text-sm font-medium mb-2">Surface Type</label> <select id="surface" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-[#00f5d4]/50 focus:outline-none"> <option value="smooth">Smooth</option> <option value="rough">Rough</option> <option value="textured">Textured</option> <option value="slippery">Slippery</option> </select>
+       </div><!-- Object Category -->
+       <div><label class="block text-sm font-medium mb-3">Object Category</label>
+        <div class="flex flex-wrap gap-3"><label class="cursor-pointer"> <input type="radio" name="category" value="fragile" class="peer hidden"> <span class="px-4 py-2 rounded-xl glass-card peer-checked:bg-[#f72585]/20 peer-checked:border-[#f72585]/50 transition-all">🔮 Fragile</span> </label> <label class="cursor-pointer"> <input type="radio" name="category" value="solid" checked class="peer hidden"> <span class="px-4 py-2 rounded-xl glass-card peer-checked:bg-[#00f5d4]/20 peer-checked:border-[#00f5d4]/50 transition-all">🧱 Solid</span> </label> <label class="cursor-pointer"> <input type="radio" name="category" value="soft" class="peer hidden"> <span class="px-4 py-2 rounded-xl glass-card peer-checked:bg-[#7b2cbf]/20 peer-checked:border-[#7b2cbf]/50 transition-all">🧸 Soft</span> </label> <label class="cursor-pointer"> <input type="radio" name="category" value="rigid" class="peer hidden"> <span class="px-4 py-2 rounded-xl glass-card peer-checked:bg-blue-500/20 peer-checked:border-blue-500/50 transition-all">📦 Rigid</span> </label>
+        </div>
+       </div><!-- Predict Button --> <button id="predict-btn" class="w-full py-4 bg-gradient-to-r from-[#00f5d4] to-[#f72585] rounded-xl font-semibold text-white hover:opacity-90 transition-all transform hover:scale-[1.02] active:scale-[0.98]"> 🤖 Predict Grip Force </button>
+      </div><!-- Result -->
+      <div id="result-container" class="hidden mt-8">
+       <div class="p-6 rounded-2xl bg-gradient-to-br from-[#00f5d4]/10 to-[#7b2cbf]/10 border border-[#00f5d4]/30 text-center"><span class="text-white/60 text-sm">Predicted Optimal Grip Force</span>
+        <div class="text-5xl font-bold mt-2 mb-1"><span id="result-value" class="gradient-text">0.00</span> <span class="text-2xl text-white/60">N</span>
+        </div><span id="result-model" class="text-[#00f5d4] text-sm">Using Random Forest Model</span>
+        <div class="mt-6 grid grid-cols-3 gap-4 text-center">
+         <div>
+          <div class="text-xs text-white/50 mb-1">
+           Min Safe
+          </div>
+          <div id="min-force" class="font-semibold text-green-400">
+           --
+          </div>
+         </div>
+         <div>
+          <div class="text-xs text-white/50 mb-1">
+           Recommended
+          </div>
+          <div id="rec-force" class="font-semibold text-[#00f5d4]">
+           --
+          </div>
+         </div>
+         <div>
+          <div class="text-xs text-white/50 mb-1">
+           Max Safe
+          </div>
+          <div id="max-force" class="font-semibold text-orange-400">
+           --
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Industries -->
+   <section id="industries" class="py-24 px-6 relative">
+    <div class="max-w-6xl mx-auto">
+     <div class="text-center mb-16"><span class="text-[#00f5d4] text-sm font-semibold tracking-wider uppercase">Applications</span>
+      <h2 class="text-3xl md:text-5xl font-bold mt-4 mb-6">Industries Using This</h2>
+      <p class="text-white/60 max-w-2xl mx-auto">Our AI grip prediction system is revolutionizing multiple sectors</p>
+     </div>
+     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="industry-card glass-card rounded-2xl p-6 hover:bg-white/5 transition-all cursor-pointer group">
+       <div class="industry-icon w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-500/5 flex items-center justify-center mb-4 transition-transform"><span class="text-3xl">🏭</span>
+       </div>
+       <h3 class="text-xl font-semibold mb-2">Manufacturing</h3>
+       <p class="text-white/50 text-sm">Precision assembly and handling of components in production lines</p>
+      </div>
+      <div class="industry-card glass-card rounded-2xl p-6 hover:bg-white/5 transition-all cursor-pointer group">
+       <div class="industry-icon w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500/20 to-orange-500/5 flex items-center justify-center mb-4 transition-transform"><span class="text-3xl">📦</span>
+       </div>
+       <h3 class="text-xl font-semibold mb-2">Warehousing</h3>
+       <p class="text-white/50 text-sm">Automated picking and packing operations in logistics centers</p>
+      </div>
+      <div class="industry-card glass-card rounded-2xl p-6 hover:bg-white/5 transition-all cursor-pointer group">
+       <div class="industry-icon w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500/20 to-green-500/5 flex items-center justify-center mb-4 transition-transform"><span class="text-3xl">🎁</span>
+       </div>
+       <h3 class="text-xl font-semibold mb-2">Packaging</h3>
+       <p class="text-white/50 text-sm">Safe handling of products during packaging and shipping prep</p>
+      </div>
+      <div class="industry-card glass-card rounded-2xl p-6 hover:bg-white/5 transition-all cursor-pointer group">
+       <div class="industry-icon w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500/20 to-red-500/5 flex items-center justify-center mb-4 transition-transform"><span class="text-3xl">🏥</span>
+       </div>
+       <h3 class="text-xl font-semibold mb-2">Medical Robotics</h3>
+       <p class="text-white/50 text-sm">Delicate surgical procedures and medical device handling</p>
+      </div>
+      <div class="industry-card glass-card rounded-2xl p-6 hover:bg-white/5 transition-all cursor-pointer group">
+       <div class="industry-icon w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500/20 to-purple-500/5 flex items-center justify-center mb-4 transition-transform"><span class="text-3xl">🛒</span>
+       </div>
+       <h3 class="text-xl font-semibold mb-2">E-commerce</h3>
+       <p class="text-white/50 text-sm">Order fulfillment and sorting in distribution centers</p>
+      </div>
+      <div class="industry-card glass-card rounded-2xl p-6 hover:bg-white/5 transition-all cursor-pointer group">
+       <div class="industry-icon w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00f5d4]/20 to-[#7b2cbf]/20 flex items-center justify-center mb-4 transition-transform"><span class="text-3xl">🚗</span>
+       </div>
+       <h3 class="text-xl font-semibold mb-2">Automotive</h3>
+       <p class="text-white/50 text-sm">Assembly line operations and quality control inspections</p>
+      </div>
+     </div>
+    </div>
+   </section><!-- Business Benefits -->
+   <section class="py-24 px-6 relative">
+    <div class="absolute inset-0 bg-gradient-to-b from-[#00f5d4]/5 to-transparent"></div>
+    <div class="max-w-6xl mx-auto relative z-10">
+     <div class="text-center mb-16"><span class="text-[#7b2cbf] text-sm font-semibold tracking-wider uppercase">Value Proposition</span>
+      <h2 class="text-3xl md:text-5xl font-bold mt-4 mb-6">Business Benefits</h2>
+      <p class="text-white/60 max-w-2xl mx-auto">Measurable advantages for organizations implementing our solution</p>
+     </div>
+     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="stat-card glass-card rounded-2xl p-6 text-center transition-all duration-300">
+       <div class="text-4xl font-bold gradient-text mb-2">
+        -85%
+       </div>
+       <h4 class="font-semibold mb-1">Product Damage</h4>
+       <p class="text-white/50 text-sm">Reduced damage to fragile items</p>
+      </div>
+      <div class="stat-card glass-card rounded-2xl p-6 text-center transition-all duration-300">
+       <div class="text-4xl font-bold gradient-text mb-2">
+        -40%
+       </div>
+       <h4 class="font-semibold mb-1">Maintenance Cost</h4>
+       <p class="text-white/50 text-sm">Lower gripper wear and tear</p>
+      </div>
+      <div class="stat-card glass-card rounded-2xl p-6 text-center transition-all duration-300">
+       <div class="text-4xl font-bold gradient-text mb-2">
+        +60%
+       </div>
+       <h4 class="font-semibold mb-1">Operations Speed</h4>
+       <p class="text-white/50 text-sm">Faster handling cycles</p>
+      </div>
+      <div class="stat-card glass-card rounded-2xl p-6 text-center transition-all duration-300">
+       <div class="text-4xl font-bold gradient-text mb-2">
+        +95%
+       </div>
+       <h4 class="font-semibold mb-1">Robot Efficiency</h4>
+       <p class="text-white/50 text-sm">Higher successful grip rate</p>
+      </div>
+      <div class="stat-card glass-card rounded-2xl p-6 text-center transition-all duration-300">
+       <div class="text-4xl font-bold gradient-text mb-2">
+        +78%
+       </div>
+       <h4 class="font-semibold mb-1">Customer Satisfaction</h4>
+       <p class="text-white/50 text-sm">Fewer damaged deliveries</p>
+      </div>
+      <div class="stat-card glass-card rounded-2xl p-6 text-center transition-all duration-300">
+       <div class="text-4xl font-bold gradient-text mb-2">
+        24/7
+       </div>
+       <h4 class="font-semibold mb-1">Adaptive Learning</h4>
+       <p class="text-white/50 text-sm">Continuous improvement</p>
+      </div>
+     </div>
+    </div>
+   </section><!-- Dataset & Project Status -->
+   <section class="py-24 px-6 relative">
+    <div class="max-w-6xl mx-auto">
+     <div class="grid lg:grid-cols-2 gap-8"><!-- Dataset Section -->
+      <div class="glass-card rounded-3xl p-8">
+       <div class="flex items-center gap-4 mb-6">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00f5d4]/20 to-[#7b2cbf]/20 flex items-center justify-center">
+         <svg class="w-7 h-7 text-[#00f5d4]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+         </svg>
+        </div>
+        <div>
+         <h3 class="text-2xl font-bold">Dataset</h3><span class="text-white/50 text-sm">Training Data Overview</span>
+        </div>
+       </div>
+       <div class="space-y-4">
+        <div class="flex items-center justify-between p-4 rounded-xl bg-white/5"><span class="text-white/70">Total Samples</span> <span class="font-semibold mono text-[#00f5d4]">10,000+</span>
+        </div>
+        <div class="flex items-center justify-between p-4 rounded-xl bg-white/5"><span class="text-white/70">Features Used</span> <span class="font-semibold mono text-[#7b2cbf]">8 Parameters</span>
+        </div>
+        <div class="flex items-center justify-between p-4 rounded-xl bg-white/5"><span class="text-white/70">Data Sources</span> <span class="font-semibold mono text-[#f72585]">Lab + Real-world</span>
+        </div>
+        <div class="flex items-center justify-between p-4 rounded-xl bg-white/5"><span class="text-white/70">Validation Split</span> <span class="font-semibold mono text-green-400">80/20</span>
+        </div>
+       </div>
+       <p class="text-white/50 text-sm mt-6">High-quality data is critical for accurate predictions. Our dataset includes diverse objects with varying properties collected from controlled lab environments and real-world scenarios.</p>
+      </div><!-- Project Status -->
+      <div class="glass-card rounded-3xl p-8">
+       <div class="flex items-center gap-4 mb-6">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#f72585]/20 to-[#7b2cbf]/20 flex items-center justify-center">
+         <svg class="w-7 h-7 text-[#f72585]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+         </svg>
+        </div>
+        <div>
+         <h3 class="text-2xl font-bold">Project Status</h3><span class="text-white/50 text-sm">Development Progress</span>
+        </div>
+       </div>
+       <div class="space-y-4">
+        <div class="p-4 rounded-xl bg-white/5">
+         <div class="flex items-center justify-between mb-2"><span class="text-white/70">Dataset Prepared</span> <span class="text-green-400 text-sm">✓ Complete</span>
+         </div>
+         <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+          <div class="h-full w-full progress-bar rounded-full"></div>
+         </div>
+        </div>
+        <div class="p-4 rounded-xl bg-white/5">
+         <div class="flex items-center justify-between mb-2"><span class="text-white/70">Models Trained</span> <span class="text-green-400 text-sm">✓ Complete</span>
+         </div>
+         <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+          <div class="h-full w-full progress-bar rounded-full"></div>
+         </div>
+        </div>
+        <div class="p-4 rounded-xl bg-white/5">
+         <div class="flex items-center justify-between mb-2"><span class="text-white/70">Testing Completed</span> <span class="text-green-400 text-sm">✓ Complete</span>
+         </div>
+         <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+          <div class="h-full w-full progress-bar rounded-full"></div>
+         </div>
+        </div>
+        <div class="p-4 rounded-xl bg-white/5">
+         <div class="flex items-center justify-between mb-2"><span class="text-white/70">Website Integrated</span> <span class="text-green-400 text-sm">✓ Complete</span>
+         </div>
+         <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+          <div class="h-full w-full progress-bar rounded-full"></div>
+         </div>
+        </div>
+        <div class="p-4 rounded-xl bg-gradient-to-r from-[#00f5d4]/10 to-[#f72585]/10 border border-[#00f5d4]/20">
+         <div class="flex items-center justify-between mb-2"><span class="font-semibold text-[#00f5d4]">Demo Ready</span> <span class="text-[#00f5d4] text-sm">🚀 Live</span>
+         </div>
+         <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+          <div class="h-full w-full bg-gradient-to-r from-[#00f5d4] to-[#f72585] rounded-full"></div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Login & Contact Section -->
+   <section id="login-contact" class="py-24 px-6 relative">
+    <div class="absolute inset-0 bg-gradient-to-b from-[#7b2cbf]/5 via-[#00f5d4]/5 to-[#f72585]/5"></div>
+    <div class="max-w-6xl mx-auto relative z-10">
+     <div class="text-center mb-16"><span class="text-[#00f5d4] text-sm font-semibold tracking-wider uppercase">Access &amp; Support</span>
+      <h2 class="text-3xl md:text-5xl font-bold mt-4 mb-6">Login Credentials &amp; Contact</h2>
+      <p class="text-white/60 max-w-2xl mx-auto">Demo access credentials and ways to reach our team</p>
+     </div>
+     <div class="grid lg:grid-cols-2 gap-8"><!-- Login Credentials Card -->
+      <div class="glass-card rounded-3xl p-8 border border-[#00f5d4]/30">
+       <div class="flex items-center gap-4 mb-6">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00f5d4]/20 to-[#7b2cbf]/20 flex items-center justify-center">
+         <svg class="w-7 h-7 text-[#00f5d4]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+         </svg>
+        </div>
+        <div>
+         <h3 class="text-2xl font-bold">Demo Login</h3><span class="text-white/50 text-sm">System Access Credentials</span>
+        </div>
+       </div>
+       <div class="space-y-4 mb-6">
+        <div class="p-4 rounded-xl bg-white/5 border border-white/10"><label class="text-xs text-white/50 block mb-2">👤 Administrator Access</label>
+         <div class="space-y-2">
+          <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg"><span class="text-sm text-white/70">Username:</span> <code class="mono text-[#00f5d4] bg-black/30 px-3 py-1 rounded">admin@gripai.com</code>
+          </div>
+          <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg"><span class="text-sm text-white/70">Password:</span> <code class="mono text-[#f72585] bg-black/30 px-3 py-1 rounded">GripAI2024@Admin</code>
+          </div>
+         </div>
+        </div>
+        <div class="p-4 rounded-xl bg-white/5 border border-white/10"><label class="text-xs text-white/50 block mb-2">👨‍💼 Demo User Access</label>
+         <div class="space-y-2">
+          <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg"><span class="text-sm text-white/70">Username:</span> <code class="mono text-[#00f5d4] bg-black/30 px-3 py-1 rounded">demo@gripai.com</code>
+          </div>
+          <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg"><span class="text-sm text-white/70">Password:</span> <code class="mono text-[#f72585] bg-black/30 px-3 py-1 rounded">DemoUser123!</code>
+          </div>
+         </div>
+        </div>
+        <div class="p-4 rounded-xl bg-white/5 border border-white/10"><label class="text-xs text-white/50 block mb-2">🔬 Researcher Access</label>
+         <div class="space-y-2">
+          <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg"><span class="text-sm text-white/70">Username:</span> <code class="mono text-[#00f5d4] bg-black/30 px-3 py-1 rounded">researcher@gripai.com</code>
+          </div>
+          <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg"><span class="text-sm text-white/70">Password:</span> <code class="mono text-[#f72585] bg-black/30 px-3 py-1 rounded">Research@2024</code>
+          </div>
+         </div>
+        </div>
+       </div>
+       <div class="flex items-start gap-3 p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
+        <svg class="w-5 h-5 text-yellow-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <div>
+         <h4 class="text-sm font-semibold text-yellow-400 mb-1">Security Notice</h4>
+         <p class="text-xs text-white/60">These are demo credentials for testing purposes only. Do not use for production systems.</p>
+        </div>
+       </div>
+      </div><!-- Contact Information Card -->
+      <div class="glass-card rounded-3xl p-8 border border-[#f72585]/30">
+       <div class="flex items-center gap-4 mb-6">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#f72585]/20 to-[#7b2cbf]/20 flex items-center justify-center">
+         <svg class="w-7 h-7 text-[#f72585]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+         </svg>
+        </div>
+        <div>
+         <h3 class="text-2xl font-bold">Contact Us</h3><span class="text-white/50 text-sm">Get in Touch</span>
+        </div>
+       </div>
+       <div class="space-y-4">
+        <div class="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group">
+         <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 rounded-xl bg-[#00f5d4]/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+           <svg class="w-5 h-5 text-[#00f5d4]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+           </svg>
+          </div>
+          <div>
+           <h4 class="font-semibold">General Inquiries</h4><a href="mailto:contact@gripai.com" class="text-sm text-[#00f5d4] hover:underline" target="_blank" rel="noopener noreferrer">contact@gripai.com</a>
+          </div>
+         </div>
+        </div>
+        <div class="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group">
+         <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 rounded-xl bg-[#7b2cbf]/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+           <svg class="w-5 h-5 text-[#7b2cbf]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+           </svg>
+          </div>
+          <div>
+           <h4 class="font-semibold">Business &amp; Partnerships</h4><a href="mailto:business@gripai.com" class="text-sm text-[#7b2cbf] hover:underline" target="_blank" rel="noopener noreferrer">business@gripai.com</a>
+          </div>
+         </div>
+        </div>
+        <div class="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group">
+         <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 rounded-xl bg-[#f72585]/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+           <svg class="w-5 h-5 text-[#f72585]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+           </svg>
+          </div>
+          <div>
+           <h4 class="font-semibold">Technical Support</h4><a href="mailto:support@gripai.com" class="text-sm text-[#f72585] hover:underline" target="_blank" rel="noopener noreferrer">support@gripai.com</a>
+          </div>
+         </div>
+        </div>
+        <div class="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group">
+         <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+           <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+           </svg>
+          </div>
+          <div>
+           <h4 class="font-semibold">Phone Support</h4><a href="tel:+15551234567" class="text-sm text-green-400 hover:underline">+1 (555) 123-4567</a>
+          </div>
+         </div>
+        </div>
+        <div class="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group">
+         <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+           <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+           </svg>
+          </div>
+          <div>
+           <h4 class="font-semibold">Office Location</h4>
+           <p class="text-sm text-blue-400">123 Innovation Drive, Tech Valley, CA 94043, USA</p>
+          </div>
+         </div>
+        </div>
+        <div class="p-4 rounded-xl bg-gradient-to-r from-[#00f5d4]/10 to-[#f72585]/10 border border-[#00f5d4]/30">
+         <h4 class="font-semibold mb-3">Follow Us</h4>
+         <div class="flex flex-wrap gap-3"><a href="https://linkedin.com/company/gripai" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center hover:bg-white/20 transition-all hover:scale-110">
+           <svg class="w-5 h-5 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+           </svg></a> <a href="https://twitter.com/gripai" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center hover:bg-white/20 transition-all hover:scale-110">
+           <svg class="w-5 h-5 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
+           </svg></a> <a href="https://github.com/gripai" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center hover:bg-white/20 transition-all hover:scale-110">
+           <svg class="w-5 h-5 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+           </svg></a> <a href="https://youtube.com/@gripai" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center hover:bg-white/20 transition-all hover:scale-110">
+           <svg class="w-5 h-5 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+           </svg></a>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Office Hours -->
+     <div class="mt-8 glass-card rounded-2xl p-6 border border-[#7b2cbf]/20">
+      <div class="flex flex-wrap items-center justify-between gap-6">
+       <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#00f5d4]/20 to-[#7b2cbf]/20 flex items-center justify-center">
+         <svg class="w-6 h-6 text-[#00f5d4]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+         </svg>
+        </div>
+        <div>
+         <h4 class="font-semibold">Support Hours</h4>
+         <p class="text-white/50 text-sm">Monday - Friday: 9:00 AM - 6:00 PM (PST)</p>
+        </div>
+       </div>
+       <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#f72585]/20 to-[#7b2cbf]/20 flex items-center justify-center">
+         <svg class="w-6 h-6 text-[#f72585]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+         </svg>
+        </div>
+        <div>
+         <h4 class="font-semibold">Response Time</h4>
+         <p class="text-white/50 text-sm">Average response within 24 hours</p>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Footer -->
+   <footer class="py-12 px-6 border-t border-white/10">
+    <div class="max-w-6xl mx-auto">
+     <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00f5d4] to-[#7b2cbf] flex items-center justify-center">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+       </div>
+       <div><span class="font-bold">GripAI</span>
+        <p class="text-white/50 text-xs">AI-Driven Grip Force Prediction</p>
+       </div>
+      </div>
+      <div class="flex items-center gap-6"><a href="#home" class="text-sm text-white/50 hover:text-white transition-colors">Home</a> <a href="#demo" class="text-sm text-white/50 hover:text-white transition-colors">Demo</a> <a href="#models" class="text-sm text-white/50 hover:text-white transition-colors">Models</a> <a href="#industries" class="text-sm text-white/50 hover:text-white transition-colors">Industries</a> <a href="#login-contact" class="text-sm text-white/50 hover:text-white transition-colors">Contact</a>
+      </div>
+      <div class="text-white/30 text-sm">
+       © 2024 GripAI Project
+      </div>
+     </div>
+    </div>
+   </footer><!-- Chatbot Button --> <button id="chat-toggle-btn" class="fixed bottom-6 right-6 w-16 h-16 rounded-full bg-gradient-to-br from-[#00f5d4] to-[#7b2cbf] flex items-center justify-center shadow-2xl hover:scale-110 transition-transform z-50 group">
+    <svg id="chat-icon" class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+    </svg>
+    <svg id="close-icon" class="w-8 h-8 text-white hidden" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+    </svg><span class="absolute -top-1 -right-1 w-5 h-5 bg-[#f72585] rounded-full flex items-center justify-center text-xs font-bold pulse-ring">3</span> </button> <!-- Chatbot Window -->
+   <div id="chat-window" class="fixed bottom-24 right-6 w-96 max-w-[calc(100vw-3rem)] glass-card rounded-3xl shadow-2xl border border-white/10 hidden z-50 overflow-hidden"><!-- Chat Header -->
+    <div class="bg-gradient-to-r from-[#00f5d4] to-[#7b2cbf] p-4 flex items-center justify-between">
+     <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"><span class="text-xl">🤖</span>
+      </div>
+      <div>
+       <h3 class="font-semibold text-white">GripAI Assistant</h3><span class="text-xs text-white/70">Online • Ready to help</span>
+      </div>
+     </div><button id="chat-minimize" class="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center transition-colors">
+      <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg></button>
+    </div><!-- Chat Messages -->
+    <div id="chat-messages" class="h-96 overflow-y-auto p-4 space-y-4 bg-[#0a0a0f]/80"><!-- Welcome Message -->
+     <div class="flex gap-3 slide-up">
+      <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#00f5d4] to-[#7b2cbf] flex items-center justify-center shrink-0"><span class="text-sm">🤖</span>
+      </div>
+      <div class="flex-1">
+       <div class="glass-card rounded-2xl rounded-tl-none p-3">
+        <p class="text-sm text-white/90">Hi! I'm the GripAI Assistant. How can I help you today?</p>
+       </div><span class="text-xs text-white/40 mt-1 block">Just now</span>
+      </div>
+     </div>
+    </div><!-- Quick Actions -->
+    <div id="quick-actions" class="p-3 border-t border-white/10 bg-[#0a0a0f]/60">
+     <div class="text-xs text-white/50 mb-2">
+      Quick questions:
+     </div>
+     <div class="flex flex-wrap gap-2"><button class="quick-action-btn px-3 py-1.5 glass-card rounded-full text-xs hover:bg-white/10 transition-colors">How does it work?</button> <button class="quick-action-btn px-3 py-1.5 glass-card rounded-full text-xs hover:bg-white/10 transition-colors">Model accuracy?</button> <button class="quick-action-btn px-3 py-1.5 glass-card rounded-full text-xs hover:bg-white/10 transition-colors">Industry use cases</button>
+     </div>
+    </div><!-- Chat Input -->
+    <div class="p-4 border-t border-white/10 bg-[#0a0a0f]/60">
+     <form id="chat-form" class="flex gap-2"><input type="text" id="chat-input" placeholder="Type your message..." class="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-[#00f5d4]/50 focus:outline-none text-sm" autocomplete="off"> <button type="submit" class="w-12 h-12 rounded-xl bg-gradient-to-r from-[#00f5d4] to-[#7b2cbf] flex items-center justify-center hover:opacity-90 transition-all shrink-0">
+       <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+       </svg></button>
+     </form>
+    </div>
+   </div>
+  </div>
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      hero_title: 'AI-Driven Grip Force Prediction for Robots',
+      hero_tagline: 'Smart gripping using Machine Learning — This system predicts the perfect gripping force for robots using AI models like Random Forest and Linear Regression.',
+      contact_email: 'contact@gripai.com',
+      background_color: '#0a0a0f',
+      surface_color: '#1a1a24',
+      text_color: '#ffffff',
+      primary_action_color: '#00f5d4',
+      secondary_action_color: '#f72585'
+    };
 
-  <!-- NAV -->
-  <nav>
-    <h2>YourName</h2>
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="#overview">Overview</a></li>
-      <li><a href="#process">Process</a></li>
-      <li><a href="#final">Final UI</a></li>
-    </ul>
-  </nav>
+    let config = { ...defaultConfig };
 
-  <!-- HEADER -->
-  <header class="hero">
-    <h1>Mobile App Redesign</h1>
-    <p>Improving usability and navigation for users</p>
-  </header>
+    // Initialize Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (newConfig) => {
+          config = { ...defaultConfig, ...newConfig };
+          
+          // Update hero title
+          const heroTitle = document.getElementById('hero-title');
+          if (heroTitle && config.hero_title) {
+            const words = config.hero_title.split(' ');
+            const midpoint = Math.ceil(words.length / 2);
+            const firstHalf = words.slice(0, midpoint).join(' ');
+            const secondHalf = words.slice(midpoint).join(' ');
+            heroTitle.innerHTML = `<span class="gradient-text">${firstHalf}</span><br><span class="text-white">${secondHalf}</span>`;
+          }
+          
+          // Update hero tagline
+          const heroTagline = document.getElementById('hero-tagline');
+          if (heroTagline && config.hero_tagline) {
+            heroTagline.textContent = config.hero_tagline;
+          }
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => {
+                config.background_color = value;
+                window.elementSdk.setConfig({ background_color: value });
+              }
+            },
+            {
+              get: () => config.surface_color || defaultConfig.surface_color,
+              set: (value) => {
+                config.surface_color = value;
+                window.elementSdk.setConfig({ surface_color: value });
+              }
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => {
+                config.text_color = value;
+                window.elementSdk.setConfig({ text_color: value });
+              }
+            },
+            {
+              get: () => config.primary_action_color || defaultConfig.primary_action_color,
+              set: (value) => {
+                config.primary_action_color = value;
+                window.elementSdk.setConfig({ primary_action_color: value });
+              }
+            },
+            {
+              get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+              set: (value) => {
+                config.secondary_action_color = value;
+                window.elementSdk.setConfig({ secondary_action_color: value });
+              }
+            }
+          ],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['hero_title', config.hero_title || defaultConfig.hero_title],
+          ['hero_tagline', config.hero_tagline || defaultConfig.hero_tagline],
+          ['contact_email', config.contact_email || defaultConfig.contact_email]
+        ])
+      });
+    }
 
-  <!-- OVERVIEW -->
-  <section id="overview">
-    <h2>Project Overview</h2>
-    <p><strong>Role:</strong> UI/UX Designer</p>
-    <p><strong>Tools:</strong> Figma, FigJam</p>
-    <p><strong>Duration:</strong> 3 Weeks</p>
-  </section>
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
 
-  <!-- PROBLEM -->
-  <section>
-    <h2>Problem Statement</h2>
-    <p>
-      Users were struggling to complete tasks due to confusing navigation,
-      poor information hierarchy, and inconsistent UI elements.
-    </p>
-  </section>
+    // Close mobile menu when clicking a link
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+      });
+    });
 
-  <!-- RESEARCH -->
-  <section id="process">
-    <h2>User Research</h2>
-    <ul>
-      <li>Users wanted faster navigation</li>
-      <li>Important actions were hard to find</li>
-      <li>Too many steps to complete simple tasks</li>
-    </ul>
-  </section>
+    // Weight slider
+    const weightSlider = document.getElementById('weight');
+    const weightValue = document.getElementById('weight-value');
+    
+    weightSlider.addEventListener('input', (e) => {
+      weightValue.textContent = `${e.target.value}g`;
+    });
 
-  <!-- WIREFRAMES -->
-  <section>
-    <h2>Wireframes & User Flow</h2>
-    <p>
-      Low-fidelity wireframes were created to simplify navigation
-      and reduce cognitive load.
-    </p>
-    <!-- You can add images later -->
-    <!-- <img src="images/wireframe.png" alt="Wireframe"> -->
-  </section>
+    // Prediction functionality
+    const predictBtn = document.getElementById('predict-btn');
+    const resultContainer = document.getElementById('result-container');
+    const resultValue = document.getElementById('result-value');
+    const minForce = document.getElementById('min-force');
+    const recForce = document.getElementById('rec-force');
+    const maxForce = document.getElementById('max-force');
 
-  <!-- FINAL UI -->
-  <section id="final">
-    <h2>Final UI Design</h2>
-    <p>
-      The final design focuses on clarity, consistency, and accessibility.
-    </p>
-    <!-- <img src="images/final-ui.png" alt="Final UI"> -->
-  </section>
+    // Material friction coefficients
+    const materialFactors = {
+      plastic: 1.0,
+      metal: 0.8,
+      glass: 1.5,
+      wood: 0.9,
+      rubber: 0.6,
+      ceramic: 1.4
+    };
 
-  <!-- OUTCOME -->
-  <section>
-    <h2>Outcome & Learnings</h2>
-    <p>
-      The redesign improved task completion speed and overall user satisfaction.
-      This project strengthened my understanding of user-centered design.
-    </p>
-  </section>
+    // Surface friction adjustments
+    const surfaceFactors = {
+      smooth: 1.2,
+      rough: 0.8,
+      textured: 0.9,
+      slippery: 1.6
+    };
 
-  <!-- FOOTER -->
-  <footer>
-    <p>© 2026 Your Name</p>
-  </footer>
+    // Category adjustments
+    const categoryFactors = {
+      fragile: 0.5,
+      solid: 1.0,
+      soft: 0.7,
+      rigid: 1.1
+    };
 
-</body>
+    predictBtn.addEventListener('click', () => {
+      // Get input values
+      const weight = parseFloat(document.getElementById('weight').value);
+      const height = parseFloat(document.getElementById('height').value);
+      const width = parseFloat(document.getElementById('width').value);
+      const thickness = parseFloat(document.getElementById('thickness').value);
+      const material = document.getElementById('material').value;
+      const surface = document.getElementById('surface').value;
+      const category = document.querySelector('input[name="category"]:checked').value;
+
+      // Calculate grip force using a simulated ML model
+      // Base force from weight (F = mg, simplified)
+      const baseForce = (weight / 1000) * 9.81;
+      
+      // Adjust for dimensions (surface area affects grip distribution)
+      const surfaceArea = (height * width + width * thickness + height * thickness) / 100;
+      const dimensionFactor = Math.max(0.5, Math.min(2, 1 / Math.sqrt(surfaceArea / 100)));
+      
+      // Apply material and surface factors
+      const materialFactor = materialFactors[material];
+      const surfaceFactor = surfaceFactors[surface];
+      const categoryFactor = categoryFactors[category];
+      
+      // Random Forest simulation (adds some non-linear complexity)
+      const randomForestAdjustment = 1 + (Math.sin(weight / 500) * 0.1) + (Math.cos(surfaceArea / 50) * 0.05);
+      
+      // Final calculation
+      const predictedForce = baseForce * materialFactor * surfaceFactor * categoryFactor * dimensionFactor * randomForestAdjustment;
+      
+      // Calculate safe range
+      const minSafe = (predictedForce * 0.7).toFixed(2);
+      const maxSafe = (predictedForce * 1.4).toFixed(2);
+      const recommended = predictedForce.toFixed(2);
+
+      // Show results with animation
+      predictBtn.textContent = '🔄 Processing...';
+      predictBtn.disabled = true;
+
+      setTimeout(() => {
+        resultValue.textContent = recommended;
+        minForce.textContent = `${minSafe} N`;
+        recForce.textContent = `${recommended} N`;
+        maxForce.textContent = `${maxSafe} N`;
+        
+        resultContainer.classList.remove('hidden');
+        resultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        predictBtn.textContent = '🤖 Predict Grip Force';
+        predictBtn.disabled = false;
+      }, 800);
+    });
+
+    // Smooth scrolling for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Chatbot functionality
+    const chatToggleBtn = document.getElementById('chat-toggle-btn');
+    const chatWindow = document.getElementById('chat-window');
+    const chatMinimize = document.getElementById('chat-minimize');
+    const chatIcon = document.getElementById('chat-icon');
+    const closeIcon = document.getElementById('close-icon');
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+    const chatMessages = document.getElementById('chat-messages');
+    const quickActions = document.getElementById('quick-actions');
+
+    // Knowledge base for chatbot responses
+    const knowledgeBase = {
+      'how does it work': 'The system works in 5 steps: 1) Robot scans the object, 2) Sensor data is collected, 3) Data is sent to the ML model, 4) AI predicts the optimal grip force, and 5) Robot adjusts its grip accordingly!',
+      'how it works': 'The system works in 5 steps: 1) Robot scans the object, 2) Sensor data is collected, 3) Data is sent to the ML model, 4) AI predicts the optimal grip force, and 5) Robot adjusts its grip accordingly!',
+      'model accuracy': 'We use two models: Random Forest (high accuracy, 90%+) and Linear Regression (medium accuracy, 60-75%). Random Forest is recommended for complex scenarios as it handles non-linear patterns better!',
+      'accuracy': 'We use two models: Random Forest (high accuracy, 90%+) and Linear Regression (medium accuracy, 60-75%). Random Forest is recommended for complex scenarios as it handles non-linear patterns better!',
+      'industry use': 'Our system is used in Manufacturing, Warehousing, Packaging, Medical Robotics, E-commerce, and Automotive industries. Each benefits from reduced damage and increased efficiency!',
+      'industries': 'Our system is used in Manufacturing, Warehousing, Packaging, Medical Robotics, E-commerce, and Automotive industries. Each benefits from reduced damage and increased efficiency!',
+      'use cases': 'Our system is used in Manufacturing, Warehousing, Packaging, Medical Robotics, E-commerce, and Automotive industries. Each benefits from reduced damage and increased efficiency!',
+      'random forest': 'Random Forest is an advanced ensemble learning model that combines multiple decision trees. It offers high accuracy (90%+), handles complex data patterns, and provides stable predictions. It\'s our recommended model!',
+      'linear regression': 'Linear Regression is a simple statistical model that\'s fast and interpretable. While it has medium accuracy (60-75%), it works well for basic predictions with linear relationships.',
+      'benefits': 'Key benefits include: 85% reduction in product damage, 40% lower maintenance costs, 60% faster operations, 95% robot efficiency, and 78% improved customer satisfaction!',
+      'input': 'The system uses 8 parameters: object weight, height, width, thickness, material type (metal, plastic, glass, wood, rubber, ceramic), surface type (smooth, rough, textured, slippery), and object category (fragile, solid, soft, rigid).',
+      'parameters': 'The system uses 8 parameters: object weight, height, width, thickness, material type (metal, plastic, glass, wood, rubber, ceramic), surface type (smooth, rough, textured, slippery), and object category (fragile, solid, soft, rigid).',
+      'dataset': 'Our dataset contains 10,000+ samples with 8 features. Data comes from both lab experiments and real-world scenarios, with an 80/20 train-validation split for optimal model performance.',
+      'demo': 'You can try our live demo above! Just enter object details like weight, dimensions, material, surface type, and category, then click "Predict Grip Force" to see the AI in action!',
+      'try': 'You can try our live demo above! Just enter object details like weight, dimensions, material, surface type, and category, then click "Predict Grip Force" to see the AI in action!',
+      'problem': 'Traditional robots use fixed grip force, causing fragile objects to break and heavy objects to slip. Manual calibration is slow and expensive. Our AI solves this by automatically predicting the perfect grip force!',
+      'solution': 'Our AI predicts grip force automatically using object data instead of fixed rules. It works for different shapes, weights, and materials, improving both safety and accuracy!',
+      'contact': 'You can reach us via email at contact@gripai.com (general inquiries), business@gripai.com (partnerships), or support@gripai.com (technical help). Phone: +1 (555) 123-4567. Office: 123 Innovation Drive, Tech Valley, CA 94043, USA.',
+      'email': 'Contact us at: contact@gripai.com (general), business@gripai.com (partnerships), or support@gripai.com (technical support). We respond within 24 hours!',
+      'phone': 'You can call us at +1 (555) 123-4567 during business hours (Mon-Fri, 9 AM - 6 PM PST).',
+      'login': 'We have 3 demo accounts: Admin (admin@gripai.com / GripAI2024@Admin), Demo User (demo@gripai.com / DemoUser123!), and Researcher (researcher@gripai.com / Research@2024). These are for testing only!',
+      'credentials': 'We have 3 demo accounts: Admin (admin@gripai.com / GripAI2024@Admin), Demo User (demo@gripai.com / DemoUser123!), and Researcher (researcher@gripai.com / Research@2024). These are for testing only!',
+      'password': 'Demo credentials are available in the Login & Contact section. We have admin, demo user, and researcher accounts with different access levels.',
+      'price': 'For pricing and commercial inquiries, please contact us at business@gripai.com or call +1 (555) 123-4567.',
+      'cost': 'For pricing and commercial inquiries, please contact us at business@gripai.com or call +1 (555) 123-4567.'
+    };
+
+    // Toggle chat window
+    chatToggleBtn.addEventListener('click', () => {
+      chatWindow.classList.toggle('hidden');
+      chatIcon.classList.toggle('hidden');
+      closeIcon.classList.toggle('hidden');
+    });
+
+    chatMinimize.addEventListener('click', () => {
+      chatWindow.classList.add('hidden');
+      chatIcon.classList.remove('hidden');
+      closeIcon.classList.add('hidden');
+    });
+
+    // Add message to chat
+    function addMessage(text, isUser = false) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'flex gap-3 slide-up';
+      
+      if (isUser) {
+        messageDiv.innerHTML = `
+          <div class="flex-1"></div>
+          <div class="flex-1">
+            <div class="bg-gradient-to-r from-[#00f5d4]/20 to-[#7b2cbf]/20 border border-[#00f5d4]/30 rounded-2xl rounded-tr-none p-3">
+              <p class="text-sm text-white/90">${text}</p>
+            </div>
+            <span class="text-xs text-white/40 mt-1 block text-right">Just now</span>
+          </div>
+        `;
+      } else {
+        messageDiv.innerHTML = `
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#00f5d4] to-[#7b2cbf] flex items-center justify-center shrink-0">
+            <span class="text-sm">🤖</span>
+          </div>
+          <div class="flex-1">
+            <div class="glass-card rounded-2xl rounded-tl-none p-3">
+              <p class="text-sm text-white/90">${text}</p>
+            </div>
+            <span class="text-xs text-white/40 mt-1 block">Just now</span>
+          </div>
+        `;
+      }
+      
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Get bot response
+    function getBotResponse(userMessage) {
+      const lowerMessage = userMessage.toLowerCase();
+      
+      // Check knowledge base
+      for (const [key, response] of Object.entries(knowledgeBase)) {
+        if (lowerMessage.includes(key)) {
+          return response;
+        }
+      }
+      
+      // Default responses for common greetings
+      if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+        return 'Hello! I\'m here to help you understand our AI-Driven Grip Force Prediction system. What would you like to know?';
+      }
+      
+      if (lowerMessage.includes('thank')) {
+        return 'You\'re welcome! Feel free to ask if you have any more questions about GripAI!';
+      }
+      
+      // Default fallback
+      return 'I can help you with questions about how the system works, model accuracy, industries, benefits, dataset, demo, and more. Try asking about any of these topics!';
+    }
+
+    // Handle form submission
+    chatForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const userMessage = chatInput.value.trim();
+      if (!userMessage) return;
+      
+      // Add user message
+      addMessage(userMessage, true);
+      chatInput.value = '';
+      
+      // Hide quick actions after first message
+      if (quickActions) {
+        quickActions.style.display = 'none';
+      }
+      
+      // Simulate typing delay
+      setTimeout(() => {
+        const botResponse = getBotResponse(userMessage);
+        addMessage(botResponse, false);
+      }, 500);
+    });
+
+    // Handle quick action buttons
+    document.querySelectorAll('.quick-action-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const question = btn.textContent;
+        chatInput.value = question;
+        chatForm.dispatchEvent(new Event('submit'));
+      });
+    });
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c88e77f57cf7ec6',t:'MTc3MDE5NDg1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
